@@ -3,9 +3,6 @@ pipeline {
     environment {
         EMAIL_RECIPIENTS = 'a.bogdanov1993@gmail.com'
     }
-    tools {
-            maven 'localMaven'
-        }
     stages {
 
         stage('Build with unit testing') {
@@ -16,7 +13,8 @@ pipeline {
                     // ** NOTE: This 'M3' Maven tool must be configured
                     // **       in the global configuration.
                     echo 'Pulling...' + env.BRANCH_NAME
-                    bat(mvn -Dintegration-tests.skip=true clean package/)
+                    def mvnHome = tool 'Maven 3.3.9'
+                    bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=true clean package/)
                     def pom = readMavenPom file: 'pom.xml'
                     print pom.version
                     junit '**//*target/surefire-reports/TEST-*.xml'
@@ -29,9 +27,10 @@ pipeline {
             // Run the sonar scan
             steps {
                 script {
+                    def mvnHome = tool 'Maven 3.3.9'
                     withSonarQubeEnv {
 
-                        bat mvn verify sonar:sonar
+                        sh "'${mvnHome}/bin/mvn'  verify sonar:sonar"
                     }
                 }
             }

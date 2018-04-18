@@ -13,7 +13,7 @@ pipeline {
                     // ** NOTE: This 'M3' Maven tool must be configured
                     // **       in the global configuration.
                     echo 'Pulling...' + env.BRANCH_NAME
-                    def mvnHome = tool 'Maven 3.3.9'
+                    def mvnHome = tool 'localMaven'
                     bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=true clean package/)
                     def pom = readMavenPom file: 'pom.xml'
                     print pom.version
@@ -27,7 +27,7 @@ pipeline {
             // Run the sonar scan
             steps {
                 script {
-                    def mvnHome = tool 'Maven 3.3.9'
+                    def mvnHome = tool 'localMaven'
                     withSonarQubeEnv {
 
                         bat (/"${mvnHome}\bin\mvn"  verify sonar:sonar)

@@ -15,10 +15,7 @@ pipeline {
                     echo 'Pulling...' + env.BRANCH_NAME
                     def mvnHome = tool 'localMaven'
                     bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=true clean package/)
-                    def pom = readMavenPom file: 'pom.xml'
-                    print pom.version
-                    junit '**//*target/surefire-reports/TEST-*.xml'
-                    archive 'target*//*.jar'
+                    archive 'target*//*.war'
                 }
 
             }

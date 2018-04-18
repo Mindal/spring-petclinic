@@ -30,7 +30,7 @@ pipeline {
                     def mvnHome = tool 'Maven 3.3.9'
                     withSonarQubeEnv {
 
-                        sh "'${mvnHome}/bin/mvn'  verify sonar:sonar"
+                        bat (/"${mvnHome}\bin\mvn"  verify sonar:sonar)
                     }
                 }
             }
